@@ -42,6 +42,8 @@ gcloud functions deploy GCFunction \
     --runtime nodejs18 \
     --entry-point helloWorld \
     --source .
+    --member=serviceAccount:PROJECT_ID@appspot.gserviceaccount.com \
+    --role=roles/artifactregistry.reader
 
 
 # Test the function
@@ -50,4 +52,4 @@ gcloud functions call GCFunction --region=$REGION --data '{"message":"Hello Worl
 
 
 # View Logs
-gcloud functions logs read helloWorld
+gcloud functions logs read GCFunction
