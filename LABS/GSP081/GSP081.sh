@@ -3,8 +3,9 @@
 # Prompt for user input
 read -p "Enter your Google Cloud project ID: " PROJECT_ID
 read -p "Enter the region (e.g., us-central1): " REGION
-read -p "Enter the name for the Cloud Function: " FUNCTION_NAME
 
+
+gcloud config set project $PROJECT_ID
 
 # Create Cloud Function directory
 mkdir GCFunction
@@ -34,17 +35,19 @@ EOF
 
 # Deploy Cloud Function
 gcloud functions deploy GCFunction \
+    --gen2 \
     --trigger-http \
     --max-instances 5 \
     --min-instances 0 \
     --runtime nodejs18 \
     --entry-point helloWorld \
     --source .
-    --allow-unauthenticated
-  
+
 
 # Test the function
-export DATA=$(printf 'Hello World!'|base64) && gcloud functions call helloWorld --data '{"data":"'$DATA'"}'
+
+gcloud functions call GCFunction --region=$REGION --data '{"message":"Hello World!"}'
+
 
 # View Logs
 gcloud functions logs read helloWorld
